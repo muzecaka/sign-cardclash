@@ -17,7 +17,7 @@ function Card({ card, onPick, isPlayerTurn, currentPlayerId, playerName }) {
 
   return (
     <motion.div
-      className={`relative w-[50px] h-[75px] sm:w-[60px] sm:h-[90px] lg:w-[70px] lg:h-[105px] rounded-lg shadow-md cursor-${
+      className={`relative w-16 h-24 sm:w-20 sm:h-30 rounded-lg shadow-md cursor-${
         canPick ? "pointer" : "default"
       }`}
       onClick={() => canPick && onPick(card.id)}

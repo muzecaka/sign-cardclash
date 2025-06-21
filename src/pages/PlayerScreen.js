@@ -52,6 +52,20 @@ function PlayerScreen() {
     localStorage.setItem(`socketId_${gameId}`, socket.id);
 
     socket.emit("getGame", { gameId });
+    console.log("Emitted getGame for gameId:", gameId);
+
+    // Set up a timeout to handle stuck loading
+    const loadingTimeout = setTimeout(() => {
+      if (!game && !isNavigating.current) {
+        console.error(
+          "Loading timeout: No game data received for gameId:",
+          gameId
+        );
+        toast.error("Failed to load game. Redirecting...");
+        isNavigating.current = true;
+        navigate("/join");
+      }
+    }, 10000); // 10 seconds timeout
 
     const handleGameData = ({ game: newGameData, role }) => {
       const now = Date.now();
@@ -251,6 +265,7 @@ function PlayerScreen() {
     socket.on("gameFullReset", handleGameFullReset);
 
     return () => {
+      clearTimeout(loadingTimeout);
       socket.off("gameData", handleGameData);
       socket.off("timerUpdate", handleTimerUpdate);
       socket.off("cardPicked", handleCardPicked);
@@ -419,7 +434,7 @@ function PlayerScreen() {
               return (
                 <div
                   key={card.id}
-                  className="relative w-[50px] h-[75px] sm:w-[60px] sm:h-[90px] lg:w-[70px] lg:h-[105px] flex items-center justify-center"
+                  className="relative w-[70px] h-[105px] flex items-center justify-center"
                   style={{ perspective: "1000px" }}
                 >
                   <motion.div
@@ -492,7 +507,7 @@ function PlayerScreen() {
                 />
                 <Button
                   onClick={handleChatButton}
-                  className="px-4 py-2 bg-orange-600 rounded-lg hover:bg-orange-700"
+                  className="px-4 py-2 bg-blue-600 rounded-lg hover:bg-blue-700"
                 >
                   Send
                 </Button>
