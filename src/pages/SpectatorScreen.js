@@ -174,7 +174,7 @@ function SpectatorScreen() {
       socket.off("gameData", handleGameData);
       socket.off("timerUpdate", handleTimerUpdate);
       socket.off("cardPicked", handleCardPicked);
-      socket.off("revealCard", handleRevealCard);
+      socket.off("revealCard", handleCardPicked);
       socket.off("playerEliminated", handlePlayerEliminated);
       socket.off("finalLeaderboard", handleFinalLeaderboard);
       socket.off("winnerDeclared", handleWinnerDeclared);
@@ -243,14 +243,14 @@ function SpectatorScreen() {
               <Timer timeLeft={timeLeft} />
             )}
           </div>
-          <div className="grid grid-cols-5 gap-2 mb-4 sm:grid-cols-6">
+          <div className="grid grid-cols-3 gap-1 sm:grid-cols-5 lg:grid-cols-6 sm:gap-2 mb-4">
             {game.cards.map((card) => {
               const player = game.players.find((p) => p.id === card.pickedBy);
               const isEnlarged = enlargedCard && enlargedCard.id === card.id;
               return (
                 <div
                   key={card.id}
-                  className="relative w-[60px] h-[90px] sm:w-[70px] sm:h-[105px] flex items-center justify-center"
+                  className="relative w-[50px] h-[75px] sm:w-[60px] sm:h-[90px] lg:w-[70px] lg:h-[105px] flex items-center justify-center"
                   style={{ perspective: "1000px" }}
                 >
                   <motion.div
@@ -306,7 +306,7 @@ function SpectatorScreen() {
               <h3 className="text-md font-medium mb-2">Chat:</h3>
               <div
                 ref={chatContainerRef}
-                className="h-64 overflow-y-auto bg-gray-700 p-2 rounded-lg mb-2"
+                className="h-48 sm:h-64 overflow-y-auto bg-gray-700 p-2 rounded-lg mb-2"
               >
                 {messages.map((msg, index) => (
                   <ChatMessage key={index} message={msg} />

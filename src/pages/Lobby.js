@@ -177,7 +177,7 @@ function Lobby() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-black-900 text-white">
-      <div className="bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-4xl flex">
+      <div className="bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-4xl flex flex-col sm:flex-row">
         <div className="flex-1">
           <h1 className="text-3xl font-bold bg-gradient-to-r from-orange-600 to-orange-400 bg-clip-text text-transparent mb-6">
             SIGN-CARDCLASH Lobby
@@ -209,14 +209,14 @@ function Lobby() {
             </Button>
           )}
         </div>
-        <div className="w-1/3 ml-6">
+        <div className="w-full sm:w-1/3 sm:ml-6 mt-6 sm:mt-0">
           <h3 className="text-lg font-semibold mb-2">Chat:</h3>
           <div
             ref={chatContainerRef}
-            className="bg-gray-700 p-4 rounded-lg h-64 overflow-y-auto mb-4"
+            className="bg-gray-700 p-4 rounded-lg h-48 sm:h-64 overflow-y-auto mb-4"
           >
             {messages.map((msg, index) => (
-              <p key={index} className="text-sm">
+              <p key={index} className="text-sm sm:text-base">
                 <span className="text-xs text-gray-400">
                   [{msg.timestamp}] {msg.role.toUpperCase()}:
                 </span>{" "}
