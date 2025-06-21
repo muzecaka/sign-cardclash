@@ -90,7 +90,7 @@ function HostSetup() {
 
   const handleCopyInviteCodes = () => {
     const baseUrl =
-      process.env.REACT_APP_CLIENT_URL || "https://sign-cardclash.vercel.app";
+      process.env.REACT_APP_CLIENT_URL || "https://sign-cardclash.netlify.app";
     const textToCopy = `Game URL: ${baseUrl}/join/${gameId}\nPlayer Codes:\n${playerCodes
       .map((code) => `  - ${code}`)
       .join("\n")}\nSpectator Code: ${spectatorCode}`;
@@ -101,7 +101,7 @@ function HostSetup() {
 
   if (gameCreated) {
     const baseUrl =
-      process.env.REACT_APP_CLIENT_URL || "https://sign-cardclash.vercel.app";
+      process.env.REACT_APP_CLIENT_URL || "https://sign-cardclash.netlify.app";
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-black-900 text-white p-4">
         <div className="bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-md">
