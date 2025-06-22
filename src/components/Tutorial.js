@@ -8,8 +8,10 @@ function Tutorial() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Retrieve gameId and backRoute from location.state
-  const { gameId, isJoinRoute } = location.state || {};
+  // Retrieve gameId and isJoinRoute from query parameters
+  const searchParams = new URLSearchParams(location.search);
+  const gameId = searchParams.get("gameId");
+  const isJoinRoute = searchParams.get("isJoinRoute") === "true";
 
   useEffect(() => {
     // Fetch the Markdown file

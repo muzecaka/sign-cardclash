@@ -208,12 +208,7 @@ function Lobby() {
               Start Game
             </Button>
           )}
-          <Link
-            to={{
-              pathname: "/tutorial",
-              state: { gameId, isJoinRoute: false },
-            }}
-          >
+          <Link to={`/tutorial?gameId=${gameId}&isJoinRoute=false`}>
             <Button className="w-full py-3 mt-4 text-base font-semibold bg-blue-600 hover:bg-blue-700 rounded-lg">
               View Tutorial
             </Button>
