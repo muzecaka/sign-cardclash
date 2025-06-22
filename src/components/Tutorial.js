@@ -5,26 +5,13 @@ import Button from "./Button";
 
 function Tutorial() {
   const [tutorialContent, setTutorialContent] = useState("");
-  const [gameId, setGameId] = useState(null);
-  const [isJoinRoute, setIsJoinRoute] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
-  useEffect(() => {
-    // Capture gameId from referrer URL (e.g., /lobby/:gameId or /join/:gameId)
-    const referrer = document.referrer;
-    let match = referrer.match(/\/lobby\/([^/]+)/);
-    if (match) {
-      setGameId(match[1]);
-      setIsJoinRoute(false);
-    } else {
-      match = referrer.match(/\/join\/([^/]+)/);
-      if (match) {
-        setGameId(match[1]);
-        setIsJoinRoute(true);
-      }
-    }
+  // Retrieve gameId and backRoute from location.state
+  const { gameId, isJoinRoute } = location.state || {};
 
+  useEffect(() => {
     // Fetch the Markdown file
     fetch("/assets/SignCardClash_Tutorial.md")
       .then((response) => {
