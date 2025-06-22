@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom"; // Added Link
 import socket from "../socket";
 import { toast } from "react-toastify";
 import Button from "../components/Button";
@@ -99,6 +99,11 @@ function JoinGame() {
         >
           Join Game
         </Button>
+        <Link to="/tutorial">
+          <Button className="w-full py-3 mt-4 text-base font-semibold bg-blue-600 hover:bg-blue-700 rounded-lg">
+            View Tutorial
+          </Button>
+        </Link>
       </div>
       <footer className="fixed bottom-2 text-gray-400 text-sm">
         Sign Card Clash by @muzecaka | ZEUS of Sign

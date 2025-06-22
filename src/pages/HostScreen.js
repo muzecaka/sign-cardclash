@@ -342,7 +342,7 @@ function HostScreen() {
               return (
                 <div
                   key={card.id}
-                  className="relative w-[50px] h-[75px] sm:w-[60px] sm:h-[90px] lg:w-[70px] lg:h-[105px] flex items-center justify-center"
+                  className="relative w-[70px] h-[105px] flex items-center justify-center"
                   style={{ perspective: "1000px" }}
                 >
                   <motion.div
@@ -464,11 +464,11 @@ function HostScreen() {
                   Reset Game
                 </Button>
                 {/* <Button
-                  onClick={handleReplayGame}
-                  className="w-full py-3 text-base font-semibold bg-green-600 hover:bg-green-700 rounded-lg"
-                >
-                  Replay Game
-                </Button> */}
+                    onClick={handleReplayGame}
+                    className="w-full py-3 text-base font-semibold bg-green-600 hover:bg-green-700 rounded-lg"
+                  >
+                    Replay Game
+                  </Button> */}
               </>
             )}
             <div className="flex space-x-2">

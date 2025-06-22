@@ -9,6 +9,7 @@ import SpectatorScreen from "./pages/SpectatorScreen";
 import GameOver from "./pages/GameOver";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
+import Tutorial from "./components/Tutorial";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <Route path="/game/:gameId/host" element={<HostScreen />} />
         <Route path="/game/:gameId/spectator" element={<SpectatorScreen />} />
         <Route path="/gameover/:gameId" element={<GameOver />} />
+        <Route path="/tutorial" element={<Tutorial />} />
       </Routes>
       <ToastContainer position="top-right" autoClose={3000} />
     </Router>

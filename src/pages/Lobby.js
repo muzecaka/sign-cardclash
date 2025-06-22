@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom"; // Added Link
 import socket from "../socket";
 import PlayerList from "../components/PlayerList";
 import SpectatorList from "../components/SpectatorList";
@@ -208,6 +208,11 @@ function Lobby() {
               Start Game
             </Button>
           )}
+          <Link to="/tutorial">
+            <Button className="w-full py-3 mt-4 text-base font-semibold bg-blue-600 hover:bg-blue-700 rounded-lg">
+              View Tutorial
+            </Button>
+          </Link>
         </div>
         <div className="w-full sm:w-1/3 sm:ml-6 mt-6 sm:mt-0">
           <h3 className="text-lg font-semibold mb-2">Chat:</h3>
