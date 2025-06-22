@@ -12,21 +12,15 @@ function JoinGame() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    socket.on("gameData", ({ game }) => {
+      if (!game) {
+        toast.error("Invalid game ID.");
+        navigate("/join");
+      }
+    });
+
     if (gameId) {
       socket.emit("getGame", { gameId });
-
-      const handleGameData = ({ game }) => {
-        if (!game) {
-          toast.error("Invalid game ID.");
-          navigate("/join");
-        }
-      };
-
-      socket.on("gameData", handleGameData);
-
-      return () => {
-        socket.off("gameData", handleGameData); // Clean up listener
-      };
     }
   }, [gameId, navigate]);
 
@@ -40,25 +34,17 @@ function JoinGame() {
       return;
     }
 
-    // Set up join listeners
-    const handleJoinSuccess = ({ gameId: joinedGameId, role }) => {
-      socket.off("joinSuccess", handleJoinSuccess); // Clean up
-      socket.off("joinError", handleJoinError); // Clean up
+    socket.on("joinSuccess", ({ gameId: joinedGameId, role }) => {
       if (role === "spectator") {
         navigate(`/game/${joinedGameId}/spectator`);
       } else {
         navigate(`/lobby/${joinedGameId}`);
       }
-    };
+    });
 
-    const handleJoinError = ({ message }) => {
-      socket.off("joinSuccess", handleJoinSuccess); // Clean up
-      socket.off("joinError", handleJoinError); // Clean up
+    socket.on("joinError", ({ message }) => {
       toast.error(message);
-    };
-
-    socket.on("joinSuccess", handleJoinSuccess);
-    socket.on("joinError", handleJoinError);
+    });
 
     socket.emit("joinGame", { gameId, name, inviteCode, isSpectator });
   };

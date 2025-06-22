@@ -1,21 +1,37 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { marked } from "marked";
-import Button from "./Button"; // Assuming Button.js exists from PlayerScreen.js
+import Button from "./Button";
 
 function Tutorial() {
   const [tutorialContent, setTutorialContent] = useState("");
+  const [gameId, setGameId] = useState(null);
+  const [isJoinRoute, setIsJoinRoute] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
+    // Capture gameId from referrer URL (e.g., /lobby/:gameId or /join/:gameId)
+    const referrer = document.referrer;
+    let match = referrer.match(/\/lobby\/([^/]+)/);
+    if (match) {
+      setGameId(match[1]);
+      setIsJoinRoute(false);
+    } else {
+      match = referrer.match(/\/join\/([^/]+)/);
+      if (match) {
+        setGameId(match[1]);
+        setIsJoinRoute(true);
+      }
+    }
+
     // Fetch the Markdown file
-    fetch("/assets/SignCardClash_Tutorial.md") // Try this first
+    fetch("/assets/SignCardClash_Tutorial.md")
       .then((response) => {
         if (!response.ok) throw new Error("Tutorial file not found");
         return response.text();
       })
       .then((text) => {
-        // Convert Markdown to HTML
         const htmlContent = marked(text);
         setTutorialContent(htmlContent);
       })
@@ -26,6 +42,14 @@ function Tutorial() {
         );
       });
   }, []);
+
+  const handleBackToJoin = () => {
+    if (gameId) {
+      navigate(isJoinRoute ? `/join/${gameId}` : `/lobby/${gameId}`);
+    } else {
+      navigate("/join");
+    }
+  };
 
   return (
     <div className="flex flex-col min-h-screen bg-black-900 text-white p-4">
@@ -39,7 +63,7 @@ function Tutorial() {
             dangerouslySetInnerHTML={{ __html: tutorialContent }}
           />
           <Button
-            onClick={() => navigate("/join")}
+            onClick={handleBackToJoin}
             className="w-full py-3 mt-4 text-base font-semibold bg-blue-600 hover:bg-blue-700 rounded-lg"
           >
             Back to Join

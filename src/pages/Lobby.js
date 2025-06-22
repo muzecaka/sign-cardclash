@@ -18,94 +18,92 @@ function Lobby() {
   const lastGameDataTime = useRef(0);
 
   useEffect(() => {
-    if (gameId) {
-      socket.emit("getGame", { gameId });
+    socket.emit("getGame", { gameId });
 
-      const handleGameData = ({ game: newGameData, role }) => {
-        const now = Date.now();
-        if (now - lastGameDataTime.current < 500) return;
-        lastGameDataTime.current = now;
+    const handleGameData = ({ game: newGameData, role }) => {
+      const now = Date.now();
+      if (now - lastGameDataTime.current < 500) return;
+      lastGameDataTime.current = now;
 
-        console.log("Received gameData in Lobby:", {
-          gameId: newGameData?.id,
-          role,
-          socketId: socket.id,
+      console.log("Received gameData in Lobby:", {
+        gameId: newGameData?.id,
+        role,
+        socketId: socket.id,
+      });
+
+      if (!newGameData && !isNavigating.current) {
+        console.warn("Game not found:", { gameId });
+        isNavigating.current = true;
+        toast.error("Game not found.");
+        navigate("/join");
+        return;
+      }
+
+      if (!userRole && role) {
+        setUserRole(role);
+      }
+
+      if (userRole && role && role !== userRole && !isNavigating.current) {
+        console.warn("Role mismatch:", {
+          gameId,
+          expected: userRole,
+          received: role,
         });
+        isNavigating.current = true;
+        toast.error("Unauthorized access.");
+        navigate("/join");
+        return;
+      }
 
-        if (!newGameData && !isNavigating.current) {
-          console.warn("Game not found:", { gameId });
-          isNavigating.current = true;
-          toast.error("Game not found.");
-          navigate("/join");
-          return;
+      setGame(newGameData);
+      setMessages(newGameData?.chatMessages || []);
+    };
+
+    const handleGameStarted = () => {
+      if (!isNavigating.current) {
+        isNavigating.current = true;
+        console.log("Game started, navigating based on role:", userRole);
+        if (userRole === "host") {
+          navigate(`/game/${gameId}/host`);
+        } else if (userRole === "player") {
+          navigate(`/game/${gameId}/player`);
+        } else if (userRole === "spectator") {
+          navigate(`/game/${gameId}/spectator`);
         }
+      }
+    };
 
-        if (!userRole && role) {
-          setUserRole(role);
-        }
+    const handleChatMessage = (message) => {
+      setMessages((prevMessages) => [...prevMessages, message].slice(-100));
+    };
 
-        if (userRole && role && role !== userRole && !isNavigating.current) {
-          console.warn("Role mismatch:", {
-            gameId,
-            expected: userRole,
-            received: role,
-          });
-          isNavigating.current = true;
-          toast.error("Unauthorized access.");
-          navigate("/join");
-          return;
-        }
+    const handleJoinError = ({ message }) => {
+      console.error("Join error in Lobby:", message);
+      toast.error(message);
+      if (!isNavigating.current) {
+        isNavigating.current = true;
+        navigate("/join");
+      }
+    };
 
-        setGame(newGameData);
-        setMessages(newGameData?.chatMessages || []);
-      };
+    const handleError = ({ message }) => {
+      console.error("Server error in Lobby:", message);
+      toast.error(message);
+    };
 
-      const handleGameStarted = () => {
-        if (!isNavigating.current) {
-          isNavigating.current = true;
-          console.log("Game started, navigating based on role:", userRole);
-          if (userRole === "host") {
-            navigate(`/game/${gameId}/host`);
-          } else if (userRole === "player") {
-            navigate(`/game/${gameId}/player`);
-          } else if (userRole === "spectator") {
-            navigate(`/game/${gameId}/spectator`);
-          }
-        }
-      };
+    socket.on("gameData", handleGameData);
+    socket.on("gameStarted", handleGameStarted);
+    socket.on("chatMessage", handleChatMessage);
+    socket.on("joinError", handleJoinError);
+    socket.on("error", handleError);
 
-      const handleChatMessage = (message) => {
-        setMessages((prevMessages) => [...prevMessages, message].slice(-100));
-      };
-
-      const handleJoinError = ({ message }) => {
-        console.error("Join error in Lobby:", message);
-        toast.error(message);
-        if (!isNavigating.current) {
-          isNavigating.current = true;
-          navigate("/join");
-        }
-      };
-
-      const handleError = ({ message }) => {
-        console.error("Server error in Lobby:", message);
-        toast.error(message);
-      };
-
-      socket.on("gameData", handleGameData);
-      socket.on("gameStarted", handleGameStarted);
-      socket.on("chatMessage", handleChatMessage);
-      socket.on("joinError", handleJoinError);
-      socket.on("error", handleError);
-
-      return () => {
-        socket.off("gameData", handleGameData);
-        socket.off("gameStarted", handleGameStarted);
-        socket.off("chatMessage", handleChatMessage);
-        socket.off("joinError", handleJoinError);
-        socket.off("error", handleError);
-      };
-    }
+    return () => {
+      socket.off("gameData", handleGameData);
+      socket.off("gameStarted", handleGameStarted);
+      socket.off("chatMessage", handleChatMessage);
+      socket.off("joinError", handleJoinError);
+      socket.off("error", handleError);
+    };
   }, [gameId, navigate, userRole]);
 
   useEffect(() => {
