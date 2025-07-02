@@ -116,7 +116,7 @@ const HostSetup = () => {
       return;
     }
     const baseUrl =
-      window.location.origin || "https://sign-cardclash.netlify.app"; // Fallback matches OLD game
+      window.location.origin || "https://sign-cardclash.vercel.app"; // Fallback matches OLD game
     const inviteText = `Game Title: ${gameTitle}\nGame Code: ${gameId}\nJoin at: ${baseUrl}/join`;
     console.log("Attempting to copy inviteText:", inviteText);
     try {
